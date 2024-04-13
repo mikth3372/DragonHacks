@@ -14,7 +14,6 @@ import asyncio
 def index():
     return render_template('index.html')
 
-
 async def main():
     client = HumeStreamClient(HUME_API_KEY)
     config = FaceConfig(identify_faces=True)
