@@ -1,6 +1,6 @@
-# DragonHacks MLH EmpathyInterview WebApp
+# Empathy Interview
 
-This is a Flask application for the DragonHacks project from Ally Kim, Mikhael Thomas, and Binh Le.
+This is a Flask weba-app for the DragonHacks project from Ally Kim, Mikhael Thomas, and Binh Le.
 
 ## Installation
 
@@ -29,7 +29,7 @@ To run the Flask application, follow these steps:
 1. Ensure you're in the project directory:
 
    ```bash
-   cd mlh-flask-app
+   cd mlh
    ```
 
 2. Run the Flask app:
