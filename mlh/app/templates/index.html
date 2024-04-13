@@ -3,13 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Webcam Feed</title>
 </head>
 <body>
-    <form action="/submit_form" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name"><br><br>
-        <input type="submit" value="Submit">
-    </form>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="capture">Capture Frame</button>
+    <script>
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                var video = document.getElementById('video');
+                video.srcObject = stream;
+            })
+            .catch(function(err) {
+                console.log("An error occurred: " + err);
+            });
+
+        document.getElementById('capture').addEventListener('click', function() {
+            var video = document.getElementById('video');
+            var canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            var context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            var frameData = canvas.toDataURL('image/jpeg').split(',')[1];
+            // Send frame data to Flask server
+            fetch('/send_frame', {
+                method: 'POST',
+                body: frameData
+            })
+            .then(function(response) {
+                console.log('Frame sent:', response);
+            })
+            .catch(function(error) {
+                console.error('Error sending frame:', error);
+            });
+        });
+    </script>
 </body>
 </html>

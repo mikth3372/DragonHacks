@@ -1,18 +1,20 @@
 import asyncio
-from hume import HumeStreamClient, StreamSocket
-from hume.models.config import ProsodyConfig
+from hume import HumeStreamClient
+from hume.models.config import LanguageConfig
 from config import HUME_API_KEY
 
-async def analyze_audio():
-    client = HumeStreamClient(HUME_API_KEY)
-    config = ProsodyConfig()
-    async with client.connect([config]) as socket:
-        result = await socket.send_file("path_to_your_audio_file.mp3")
-        return result
-
+samples = [
+    "Mary had a little lamb,",
+    "Its fleece was white as snow."
+    "Everywhere the child went,"
+    "The little lamb was sure to go."
+]
 async def main():
-    result = await analyze_audio()
-    print(result)
-
-if __name__ == "__main__":
-    asyncio.run(main())
+    client = HumeStreamClient(HUME_API_KEY)
+    config = LanguageConfig()
+    async with client.connect([config]) as socket:
+        for sample in samples:
+            result = await socket.send_text(sample)
+            emotions = result["language"]["predictions"][0]["emotions"]
+            print(emotions)
+asyncio.run(main())
