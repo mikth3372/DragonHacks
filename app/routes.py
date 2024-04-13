@@ -8,15 +8,8 @@ from hume import HumeStreamClient, StreamSocket
 from hume.models.config import FaceConfig
 import base64
 import asyncio
-import pprint
-
-def print_pretty(data):
-    pp = pprint.PrettyPrinter(indent=4)
-    pp.pprint(data)
-
 @app.route('/')
 @app.route('/index')
-
 
 def index():
     return render_template('index.html')
@@ -27,7 +20,7 @@ async def main():
     config = FaceConfig(identify_faces=True)
     async with client.connect([config]) as socket:
         result = await socket.send_file("temp_image.jpg")
-    print(result)
+        print(result)
     asyncio.run(main())
 
 @socketio.on('send_frame')
@@ -39,7 +32,8 @@ def handle_connect():
     print('Client connected')
     
 @socketio.on('send_frame')
-def handle_send_frame(frame_data):
+def handle_send_frame(data):
+    frame_data = data['frameData']
     print("Received frame data from client, starting background task.")
     def start_async_task():
         loop = asyncio.new_event_loop()
@@ -63,7 +57,7 @@ async def send_frame_to_hume(frame_data):
 
 def save_image_from_base64(base64_string, path_to_save):
     with open(path_to_save, "wb") as fh:
-        image_data = base64.b64decode(base64_string.split(",")[1])
+        image_data = base64.b64decode(base64_string.split(",")[1])  # Remove the base64 prefix if present
         fh.write(image_data)
 
 async def process_frame(frame_data):

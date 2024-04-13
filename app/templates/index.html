@@ -12,16 +12,41 @@
 </head>
 <body>
     <video id="video" width="640" height="480" autoplay></video>
+    
     <button id="capture">Capture Frame</button>
-    <div id="responseDisplay"></div>
     <div>
-        <input type="radio" id="interviewer" name="role" value="interviewer" checked>
-        <label for="interviewer">Interviewer</label>
-        <input type="radio" id="interviewee" name="role" value="interviewee">
-        <label for="interviewee">Interviewee</label>
+        <button id="interviewer" onclick="chooseRole('interviewer')">Interviewer</button>
+        <button id="interviewee" onclick="chooseRole('interviewee')">Interviewee</button>
     </div>
+    <div id="responseDisplay"></div>
+
     <script>
         var socket = io();
+        var role = 'interviewer';  // Default role
+
+        function chooseRole(selectedRole) {
+            role = selectedRole;
+            console.log("Role selected:", role);
+            socket.emit('set_role', role);
+            if (role === 'interviewee') {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function(err) {
+                    console.log("An error occurred: " + err);
+                });
+            }
+        }
+        
+        
+        document.querySelectorAll('input[name="role"]').forEach(input => {
+            input.addEventListener('change', function() {
+                role = this.value;
+                console.log("Role selected:", role);
+                socket.emit('set_role', role);
+            });
+        });
 
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function(stream) {
@@ -42,7 +67,7 @@
             var frameData = canvas.toDataURL('image/jpeg').split(',')[1];
 
             console.log("Sending frame data to server.");
-            socket.emit('send_frame', frameData);
+            socket.emit('send_frame', { frameData: frameData, role: role });
         });
 
         socket.on('response_from_server', function(data) {
