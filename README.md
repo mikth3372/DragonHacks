@@ -1,6 +1,6 @@
-# Flask MLH App
+# DragonHacks MLH EmpathyInterview WebApp
 
-This is a Flask application for MLH (Major League Hacking).
+This is a Flask application for the DragonHacks project from Ally Kim, Mikhael Thomas, and Binh Le.
 
 ## Installation
 
