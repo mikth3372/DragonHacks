@@ -8,6 +8,11 @@ from hume import HumeStreamClient, StreamSocket
 from hume.models.config import FaceConfig
 import base64
 import asyncio
+import pprint
+
+def print_pretty(data):
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(data)
 
 @app.route('/')
 @app.route('/index')
@@ -58,7 +63,7 @@ async def send_frame_to_hume(frame_data):
 
 def save_image_from_base64(base64_string, path_to_save):
     with open(path_to_save, "wb") as fh:
-        image_data = base64.b64decode(base64_string.split(",")[1])  # Remove the base64 prefix if present
+        image_data = base64.b64decode(base64_string.split(",")[1])
         fh.write(image_data)
 
 async def process_frame(frame_data):

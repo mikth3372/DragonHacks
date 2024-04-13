@@ -5,10 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webcam Feed</title>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        body { display: flex; flex-direction: column; align-items: center; margin-top: 20px; }
+        #responseDisplay { margin-top: 20px; }
+    </style>
 </head>
 <body>
     <video id="video" width="640" height="480" autoplay></video>
     <button id="capture">Capture Frame</button>
+    <div id="responseDisplay"></div>
+    <div>
+        <input type="radio" id="interviewer" name="role" value="interviewer" checked>
+        <label for="interviewer">Interviewer</label>
+        <input type="radio" id="interviewee" name="role" value="interviewee">
+        <label for="interviewee">Interviewee</label>
+    </div>
     <script>
         var socket = io();
 
@@ -21,7 +32,7 @@
                 console.log("An error occurred: " + err);
             });
 
-            document.getElementById('capture').addEventListener('click', function() {
+        document.getElementById('capture').addEventListener('click', function() {
             var video = document.getElementById('video');
             var canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
@@ -36,6 +47,8 @@
 
         socket.on('response_from_server', function(data) {
             console.log('Received response from server:', data);
+            var display = document.getElementById('responseDisplay');
+            display.textContent = 'Server Response: ' + JSON.stringify(data, null, 2);
         });
         
     </script>
