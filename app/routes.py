@@ -19,7 +19,7 @@ import tiktoken
 import time
 
 
-openai.api_key = ''
+openai.api_key = 'sk-'
 os.environ['OPENAI_API_KEY'] = openai.api_key
 CORS(app)
 @app.route('/')
