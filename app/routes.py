@@ -29,6 +29,9 @@ def upload_file():
         filename = secure_filename(file.filename)
         print(f"Saving file: {filename}")
         save_path = os.path.join('uploads', filename)
+        if not os.path.exists('uploads'):
+            print("No uploads folder, creating one")
+            os.makedirs('uploads')
         file.save(save_path)
         return jsonify({"message": "File uploaded successfully", "path": save_path}), 200
     return jsonify({"error": "No file part"}), 400
