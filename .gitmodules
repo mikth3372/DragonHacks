@@ -1,0 +1,3 @@
+[submodule "app/clien-react/meetingsdk-auth-endpoint-sample"]
+	path = app/clien-react/meetingsdk-auth-endpoint-sample
+	url = https://github.com/zoom/meetingsdk-auth-endpoint-sample
