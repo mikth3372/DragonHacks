@@ -17,9 +17,9 @@ import json
 CORS(app)
 @app.route('/')
 
-@app.route('/test')
-def index2():
-    return render_template('test.html')
+# @app.route('/test')
+# # def index2():
+# #     return render_template('test.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
