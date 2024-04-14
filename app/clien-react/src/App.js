@@ -7,6 +7,7 @@ import Header from "./components/header";
 import { useState } from "react";
 import html2canvas from "html2canvas";
 // import Zoom from "./components/Zoom";
+import { BarChart } from "@mui/x-charts/BarChart";
 
 function App() {
   // variable for user status
@@ -14,6 +15,69 @@ function App() {
   const [password, setPassword] = useState("");
   const [meeting, setMeeting] = useState("");
   const bgColorClass = userStatus === "good" ? "bg-green-500" : "bg-red-500";
+  const [emotionData, setEmotionData] = useState([]);
+
+  const chartSetting = {
+    xAxis: [
+      {
+        label: "Emotions",
+      },
+    ],
+    width: 500,
+    height: 400,
+  };
+
+  const emotionCategories = {
+    positive: [
+      "Romance",
+      "Sympathy",
+      "Surprise (positive)",
+      "Admiration",
+      "Adoration",
+      "Aesthetic Appreciation",
+      "Amusement",
+      "Calmness",
+      "Contentment",
+      "Ecstasy",
+      "Interest",
+      "Joy",
+      "Love",
+      "Pride",
+      "Satisfaction",
+      "Triumph",
+    ],
+    negative: [
+      "Contemplation",
+      "Tiredness",
+      "Surprise (negative)",
+      "Confusion",
+      "Boredom",
+      "Anger",
+      "Anxiety",
+      "Awe",
+      "Awkwardness",
+      "Contempt",
+      "Disappointment",
+      "Disgust",
+      "Distress",
+      "Doubt",
+      "Embarrassment",
+      "Empathic Pain",
+      "Fear",
+      "Guilt",
+      "Horror",
+      "Pain",
+      "Sadness",
+      "Shame",
+    ],
+    neutral: [
+      "Concentration",
+      "Craving",
+      "Determination",
+      "Realization",
+      "Relief",
+    ],
+  };
 
   const client = ZoomMtgEmbedded.createClient();
   var authEndpoint = "http://localhost:4000";
@@ -89,7 +153,7 @@ function App() {
 
   const captureScreenshot = () => {
     // Get a reference to the canvas element
-    const canvas = document.getElementById('zoom-sdk-video-canvas');
+    const canvas = document.getElementById("zoom-sdk-video-canvas");
 
     // Check if the canvas element exists
     if (!canvas) {
@@ -112,7 +176,7 @@ function App() {
       fetch("http://127.0.0.1:5000/upload", {
         method: "POST",
         headers: {
-          "Access-Control-Allow-Origin": "*"
+          "Access-Control-Allow-Origin": "*",
         },
         body: formData,
       })
@@ -120,14 +184,18 @@ function App() {
         .then((data) => {
           console.log("Success:", data);
           // Handle the response data here
+          setEmotionData(
+            data.result.face.predictions.emotions.sort(
+              (a, b) => b.data - a.data
+            )
+          );
         })
         .catch((error) => {
           console.error("Error:", error);
           // Handle the error here
         });
     });
-  }
-
+  };
 
   function startMeeting(signature) {
     let meetingSDKElement = document.getElementById("meetingSDKElement");
@@ -195,7 +263,7 @@ function App() {
               type="text"
               name="password"
               id="password"
-              onChange={(e) => setPassword((e.target.value).trim())}
+              onChange={(e) => setPassword(e.target.value.trim())}
               placeholder="Enter Meeting Password"
               className="p-10 ml-3 appearance-none border rounded w-15 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
@@ -209,7 +277,7 @@ function App() {
           </form>
         </div>
         <div className="flex flex-col">
-          <div className="flex flex-col w-1/2 bg-slate-200 mx-auto mb-60">
+          <div className="flex flex-col w-1/2 bg-slate-200 mx-auto mb-30">
             <div className={`flex rounded ${bgColorClass} justify-center`}>
               User Status: {userStatus}
             </div>
@@ -220,7 +288,17 @@ function App() {
             </div>
           </div>
         </div>
-         <button onClick={captureScreenshot}>Screenshot Button</button> 
+        <div className="flex justify-center items-center">
+          <BarChart
+            dataset={emotionData}
+            yAxis={[{ scaleType: "band", dataKey: "label" }]}
+            series={[{ dataKey: "data", label: "Emotions" }]}
+            layout="horizontal"
+            grid={{ vertical: true }}
+            {...chartSetting}
+          />
+        </div>
+        <button onClick={captureScreenshot}>Screenshot Button</button>
       </main>
       <Footer />
     </div>
