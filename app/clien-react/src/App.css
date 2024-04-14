@@ -46,3 +46,7 @@
   width: 500px;
   height: 500px;
 } */
+
+#meetingSDKElement {
+  display: flex;
+}

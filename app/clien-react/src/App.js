@@ -5,25 +5,30 @@ import ZoomMtgEmbedded from "@zoom/meetingsdk/embedded";
 import Footer from "./components/footer";
 import Header from "./components/header";
 import { useState } from "react";
-import StatusBox from "./components/StatusBox";
 import html2canvas from "html2canvas";
 // import Zoom from "./components/Zoom";
 
 function App() {
   // variable for user status
   const [userStatus, setUserStatus] = useState("good");
-  const [meeting, setMeeting] = useState("83243247640");
+  const [meeting, setMeeting] = useState("");
+  const bgColorClass = userStatus === "good" ? "bg-green-500" : "bg-red-500";
 
   const client = ZoomMtgEmbedded.createClient();
   var authEndpoint = "http://localhost:4000";
   var sdkKey = "4VvHTcUiRoqpvg0rsBe5kw";
-  var meetingNumber = "83243247640";
-  var passWord = "9u0D8c";
+  var meetingNumber = meeting;
+  var passWord = "Q79kyi";
   var role = 1;
   var userName = "allykim@seas.upenn.edu";
   var userEmail = "allykim@seas.upenn.edu";
   var registrantToken = "";
   var zakToken = "";
+
+  function handleJoinMeeting(e) {
+    e.preventDefault();
+    getSignature(e);
+  }
 
   function getSignature(e) {
     e.preventDefault();
@@ -45,45 +50,77 @@ function App() {
       });
   }
 
-  const captureScreenshot = () => {
-    // Capture the screenshot from the entire window/document
-    html2canvas(document.body)
-      .then((canvas) => {
-        // Convert canvas to Blob
-        canvas.toBlob((blob) => {
-          // Check if blob is null
-          if (!blob) {
-            console.error("Blob was null");
-            return;
-          }
-          const formData = new FormData();
-          formData.append("screenshot", blob, "screenshot.png");
+  // const captureScreenshot = () => {
+  //   // Capture the screenshot from the entire window/document
+  //   html2canvas(document.body)
+  //     .then((canvas) => {
+  //       // Convert canvas to Blob
+  //       canvas.toBlob((blob) => {
+  //         // Check if blob is null
+  //         if (!blob) {
+  //           console.error("Blob was null");
+  //           return;
+  //         }
+  //         const formData = new FormData();
+  //         formData.append("screenshot", blob, "screenshot.png");
 
-          // Send the Blob to the Flask server
-          fetch("http://127.0.0.1:5000/upload", {
-            method: "POST",
-            headers: {
-              "Access-Control-Allow-Origin": "*"
-            },
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log("Success:", data);
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-            });
-        }, "image/png");
-      })
-      .catch((err) => {
-        console.error("Error capturing screenshot:", err);
+  //         // Send the Blob to the Flask server
+  //         fetch("http://127.0.0.1:5000/upload", {
+  //           method: "POST",
+  //           headers: {
+  //             "Access-Control-Allow-Origin": "*"
+  //           },
+  //           body: formData,
+  //         })
+  //           .then((response) => response.json())
+  //           .then((data) => {
+  //             console.log("Success:", data);
+  //           })
+  //           .catch((error) => {
+  //             console.error("Error:", error);
+  //           });
+  //       }, "image/png");
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error capturing screenshot:", err);
+  //     });
+  // };
+
+  const captureScreenshot = () => {
+    // Get a reference to the canvas element
+    const canvas = document.getElementById('zoom-sdk-video-canvas');
+
+    // Check if the canvas element exists
+    if (!canvas) {
+      console.error("Canvas element not found");
+      return;
+    }
+
+    // Convert canvas to Blob
+    canvas.toBlob((blob) => {
+      // Check if blob is null
+      if (!blob) {
+        console.error("Blob was null");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("screenshot", blob, "screenshot.png");
+
+      // Send the Blob to the Flask server
+      fetch("http://127.0.0.1:5000/upload", {
+        method: "POST",
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
+        body: formData,
       });
-  };
+    });
+  }
+
 
   function startMeeting(signature) {
     let meetingSDKElement = document.getElementById("meetingSDKElement");
-
     client
       .init({
         zoomAppRoot: meetingSDKElement,
@@ -130,31 +167,42 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="App bg-main-color">
       <Header />
       <main>
         {/* For Component View */}
-        <div className="flex flex-row">
-          <div className="flex w-1/2">
-            <div id="meetingSDKElement" className="flex p-10">
-              {/* Zoom Meeting SDK Component View Rendered Here */}
+        <div className="flex place-content-center pb-16 bg-main-color">
+          <form onSubmit={handleJoinMeeting} className="flex flex-row">
+            <input
+              type="text"
+              name="meeting-number"
+              id="meeting-number"
+              onChange={(e) => setMeeting(e.target.value)}
+              placeholder="Enter Meeting Number"
+              className="p-10 appearance-none border rounded w-15 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+            <button
+              type="submit"
+              onSubmit={handleJoinMeeting}
+              className="ml-10 bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-full"
+            >
+              Join Meeting
+            </button>
+          </form>
+        </div>
+        <div className="flex flex-col">
+          <div className="flex flex-col w-1/2 bg-slate-200 mx-auto mb-60">
+            <div className={`flex rounded ${bgColorClass} justify-center`}>
+              User Status: {userStatus}
+            </div>
+            <div className="flex w-auto h-96">
+              <div id="meetingSDKElement" className="flex">
+                {/* Zoom Meeting SDK Component View Rendered Here */}
+              </div>
             </div>
           </div>
-          <div className="flex flex-col w-1/2">
-            <div className="flex h-3/5">ChatBox</div>
-            <StatusBox userStatus={userStatus} />
-          </div>
         </div>
-
-        {/* <input
-          type="text"
-          value="Set Meeting Number"
-          onClick={() => setMeeting(meetingNumber)}
-        /> */}
-
-        <button onClick={getSignature}>Join Meeting</button>
-        <button onClick={captureScreenshot}>Screenshot Button</button>
-        {/* <ScreenshotButton /> */}
+         <button onClick={captureScreenshot}>Screenshot Button</button> 
       </main>
       <Footer />
     </div>
