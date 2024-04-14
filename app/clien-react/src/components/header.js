@@ -16,7 +16,10 @@ function Header() {
               </a>
             </li>
             <li>
-              <a href="#" className="hover:font-bold  me-4 md:me-6">
+              <a
+                href="https://github.com/mikth3372/DragonHacks"
+                className="hover:font-bold  me-4 md:me-6"
+              >
                 GitHub
               </a>
             </li>
