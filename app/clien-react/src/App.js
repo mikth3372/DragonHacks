@@ -195,7 +195,7 @@ function App() {
               type="text"
               name="password"
               id="password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setPassword(trim(e.target.value))}
               placeholder="Enter Meeting Password"
               className="p-10 ml-3 appearance-none border rounded w-15 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
