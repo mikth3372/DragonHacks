@@ -52,7 +52,18 @@ async def send_frame_to_hume(frame_data):
         await websocket.send(json.dumps(message))
         response = await websocket.recv()
         print("Received:", response)
-        socketio.emit('response_from_server', {'data': response})
+
+        # Assuming the response is a JSON string
+        response_data = json.loads(response)
+
+        # Assuming the response_data has a structure like: {"expressions": {"emotion1": score1, "emotion2": score2, ...}}
+        expressions = response_data.get('expressions', {})
+
+        # Find the emotion with the highest score
+        dominant_emotion = max(expressions, key=expressions.get)
+
+        # Emit the dominant emotion
+        socketio.emit('response_from_server', {'dominant_emotion': dominant_emotion})
 
 def save_image_from_base64(base64_string, path_to_save):
     with open(path_to_save, "wb") as fh:
@@ -73,6 +84,7 @@ async def process_frame(frame_data):
             result = await socket.send_file(filepath)
             print(result)
             socketio.emit('response_from_server', {'data': result})
+
     except Exception as e:
         print(f"Error processing frame with Hume SDK: {e}")
         socketio.emit('response_from_server', {'error': str(e)})
