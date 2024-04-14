@@ -18,7 +18,7 @@ function App() {
   var authEndpoint = "http://localhost:4000";
   var sdkKey = "4VvHTcUiRoqpvg0rsBe5kw";
   var meetingNumber = meeting;
-  var passWord = "azx8A8";
+  var passWord = "Q79kyi";
   var role = 1;
   var userName = "allykim@seas.upenn.edu";
   var userEmail = "allykim@seas.upenn.edu";
@@ -50,41 +50,74 @@ function App() {
       });
   }
 
-  const captureScreenshot = () => {
-    // Capture the screenshot from the entire window/document
-    html2canvas(document.body)
-      .then((canvas) => {
-        // Convert canvas to Blob
-        canvas.toBlob((blob) => {
-          // Check if blob is null
-          if (!blob) {
-            console.error("Blob was null");
-            return;
-          }
-          const formData = new FormData();
-          formData.append("screenshot", blob, "screenshot.png");
+  // const captureScreenshot = () => {
+  //   // Capture the screenshot from the entire window/document
+  //   html2canvas(document.body)
+  //     .then((canvas) => {
+  //       // Convert canvas to Blob
+  //       canvas.toBlob((blob) => {
+  //         // Check if blob is null
+  //         if (!blob) {
+  //           console.error("Blob was null");
+  //           return;
+  //         }
+  //         const formData = new FormData();
+  //         formData.append("screenshot", blob, "screenshot.png");
 
-          // Send the Blob to the Flask server
-          fetch("http://127.0.0.1:5000/upload", {
-            method: "POST",
-            headers: {
-              "Access-Control-Allow-Origin": "*"
-            },
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log("Success:", data);
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-            });
-        }, "image/png");
-      })
-      .catch((err) => {
-        console.error("Error capturing screenshot:", err);
+  //         // Send the Blob to the Flask server
+  //         fetch("http://127.0.0.1:5000/upload", {
+  //           method: "POST",
+  //           headers: {
+  //             "Access-Control-Allow-Origin": "*"
+  //           },
+  //           body: formData,
+  //         })
+  //           .then((response) => response.json())
+  //           .then((data) => {
+  //             console.log("Success:", data);
+  //           })
+  //           .catch((error) => {
+  //             console.error("Error:", error);
+  //           });
+  //       }, "image/png");
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error capturing screenshot:", err);
+  //     });
+  // };
+
+  const captureScreenshot = () => {
+    // Get a reference to the canvas element
+    const canvas = document.getElementById('zoom-sdk-video-canvas');
+
+    // Check if the canvas element exists
+    if (!canvas) {
+      console.error("Canvas element not found");
+      return;
+    }
+
+    // Convert canvas to Blob
+    canvas.toBlob((blob) => {
+      // Check if blob is null
+      if (!blob) {
+        console.error("Blob was null");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("screenshot", blob, "screenshot.png");
+
+      // Send the Blob to the Flask server
+      fetch("http://127.0.0.1:5000/upload", {
+        method: "POST",
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
+        body: formData,
       });
-  };
+    });
+  }
+
 
   function startMeeting(signature) {
     let meetingSDKElement = document.getElementById("meetingSDKElement");
@@ -169,7 +202,7 @@ function App() {
             </div>
           </div>
         </div>
-        {/* <button onClick={captureScreenshot}>Screenshot Button</button> */}
+         <button onClick={captureScreenshot}>Screenshot Button</button> 
       </main>
       <Footer />
     </div>
