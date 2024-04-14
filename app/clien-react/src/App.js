@@ -11,6 +11,7 @@ import html2canvas from "html2canvas";
 function App() {
   // variable for user status
   const [userStatus, setUserStatus] = useState("good");
+  const [password, setPassword] = useState("");
   const [meeting, setMeeting] = useState("");
   const bgColorClass = userStatus === "good" ? "bg-green-500" : "bg-red-500";
 
@@ -18,7 +19,7 @@ function App() {
   var authEndpoint = "http://localhost:4000";
   var sdkKey = "4VvHTcUiRoqpvg0rsBe5kw";
   var meetingNumber = meeting;
-  var passWord = "Ma1k3X";
+  var passWord = password;
   var role = 1;
   var userName = "allykim@seas.upenn.edu";
   var userEmail = "allykim@seas.upenn.edu";
@@ -189,6 +190,14 @@ function App() {
               onChange={(e) => setMeeting(e.target.value)}
               placeholder="Enter Meeting Number"
               className="p-10 appearance-none border rounded w-15 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+            <input
+              type="text"
+              name="password"
+              id="password"
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter Meeting Password"
+              className="p-10 ml-3 appearance-none border rounded w-15 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <button
               type="submit"
