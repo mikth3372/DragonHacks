@@ -260,16 +260,16 @@ function Emotions() {
             </div>
           </div>
 
-          <div className="w-2/5 flex flex-col place-items-center m-5 mb-10">
-            <div className="font-serif mt-5 w-3/5 mx-2">{prompt}</div>
+          <div className="w-auto flex flex-col place-items-center mb-10">
+            <div className="font-serif mt-5">{prompt}</div>
             <BarChart
+            margin={{left: 100}}
               dataset={emotionData}
               yAxis={[{ scaleType: "band", dataKey: "name" }]}
               series={[{ dataKey: "score" }]}
               layout="horizontal"
               grid={{ vertical: true }}
               {...chartSetting}
-              className="w-auto"
             />
           </div>
         </div>
