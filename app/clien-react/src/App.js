@@ -60,8 +60,11 @@ function App() {
           formData.append("screenshot", blob, "screenshot.png");
 
           // Send the Blob to the Flask server
-          fetch("http://localhost:5000/upload", {
+          fetch("http://127.0.0.1:5000/upload", {
             method: "POST",
+            headers: {
+              "Access-Control-Allow-Origin": "*"
+            },
             body: formData,
           })
             .then((response) => response.json())

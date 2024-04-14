@@ -21,10 +21,7 @@ CORS(app)
 def index2():
     return render_template('test.html')
 
-
-
 @app.route('/upload', methods=['POST'])
-@cross_origin()
 def upload_file():
     print("Inside file")
     if 'screenshot' in request.files:
