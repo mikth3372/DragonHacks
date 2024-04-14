@@ -184,11 +184,7 @@ function App() {
         .then((data) => {
           console.log("Success:", data);
           // Handle the response data here
-          setEmotionData(
-            data.result.face.predictions.emotions.sort(
-              (a, b) => b.data - a.data
-            )
-          );
+          setEmotionData(data.topEmotions);
         })
         .catch((error) => {
           console.error("Error:", error);
