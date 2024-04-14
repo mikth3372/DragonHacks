@@ -18,7 +18,7 @@ function App() {
   var authEndpoint = "http://localhost:4000";
   var sdkKey = "4VvHTcUiRoqpvg0rsBe5kw";
   var meetingNumber = meeting;
-  var passWord = "Q79kyi";
+  var passWord = "Ma1k3X";
   var role = 1;
   var userName = "allykim@seas.upenn.edu";
   var userEmail = "allykim@seas.upenn.edu";
@@ -114,7 +114,16 @@ function App() {
           "Access-Control-Allow-Origin": "*"
         },
         body: formData,
-      });
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+          // Handle the response data here
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          // Handle the error here
+        });
     });
   }
 
