@@ -19,7 +19,7 @@ import tiktoken
 import time
 
 
-openai.api_key = 'sk-'
+openai.api_key = ''
 os.environ['OPENAI_API_KEY'] = openai.api_key
 CORS(app)
 @app.route('/')
@@ -60,17 +60,23 @@ def upload_file():
         max_score = 0
         #call gpt_response
         for emotion in result['face']['predictions'][0]['emotions']:
-    # If the current emotion's score is higher than the current max score, update the max score and max emotion
+            # If the current emotion's score is higher than the current max score, update the max score and max emotion
             if emotion['score'] > max_score:
                 max_score = emotion['score']
                 max_emotion = emotion['name']
         sorted_emotions = sorted(result['face']['predictions'][0]['emotions'], key=lambda x: x['score'], reverse=True)
         top_4_emotions = sorted_emotions[:4]
-        top_4_emotions_names_scores = [(emotion['name'], emotion['score']) for emotion in top_4_emotions]
+        top_4_emotions_names_scores = [{"name": emotion['name'], "score": emotion['score']} for emotion in top_4_emotions]
         gpt_response = get_gpt_response(max_emotion)
         loop.close()
         
-        return jsonify({"message": "File uploaded successfully", "result": result,"response":gpt_response, "emotion":max_emotion, "top_emotions":top_4_emotions_names_scores }), 200
+        return jsonify({
+            "message": "File uploaded successfully",
+            "result": result,
+            "response": gpt_response,
+            "emotion": max_emotion,
+            "top_emotions": top_4_emotions_names_scores
+        }), 200
     return jsonify({"error": "No file part"}), 400
 
 
@@ -94,8 +100,8 @@ def get_gpt_response(input_text, max_response_tokens=500, max_retries=3, base_wa
 
     overall_max_tokens = 4096
     prompt_max_tokens = overall_max_tokens - max_response_tokens
-
-    system_query = {"role": "system", "content": "This is an interview and you are helping the interviewer understand the emotions of the interviewee and help guide them accordingly. Based on the emotion they feel, give the interviewer a response that would help the interviewee feel better. The interviewee is feeling the following emotion:"}
+    # "Based on the emotion of the person provided, summarise the emotion and give me a concise sentence on how to respond to this person . Emotion is :"
+    system_query = {"role": "system", "content": "Based on the emotion of the person provided, summarise the emotion and give me a concise sentence on how to respond to this person. Emotion is:"}
 
     formatted_query = {"role": "user", "content": input_text}
 

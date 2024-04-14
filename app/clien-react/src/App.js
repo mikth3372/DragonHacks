@@ -16,6 +16,7 @@ function App() {
   const [meeting, setMeeting] = useState("");
   const bgColorClass = userStatus === "good" ? "bg-green-500" : "bg-red-500";
   const [emotionData, setEmotionData] = useState([]);
+  const [prompt, setPrompt] = useState("")
 
   const chartSetting = {
     xAxis: [
@@ -184,7 +185,8 @@ function App() {
         .then((data) => {
           console.log("Success:", data);
           // Handle the response data here
-          setEmotionData(data.topEmotions);
+          setEmotionData(data.top_emotions);
+          setPrompt(data.response);
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -272,29 +274,36 @@ function App() {
             </button>
           </form>
         </div>
+        <div className="flex flex-row"></div>
         <div className="flex flex-col">
           <div className="flex flex-col w-1/2 bg-slate-200 mx-auto mb-30">
-            <div className={`flex rounded ${bgColorClass} justify-center`}>
+            {/* <div className={`flex rounded ${bgColorClass} justify-center`}>
               User Status: {userStatus}
-            </div>
+            </div> */}
             <div className="flex w-auto h-96">
               <div id="meetingSDKElement" className="flex">
                 {/* Zoom Meeting SDK Component View Rendered Here */}
               </div>
+              <div className="h-20"></div>
             </div>
           </div>
+          <div className="flex justify-center my-10">
+            <button className="w-32 ml-10 bg-slate-500 hover:bg-slate-700 text-white font-bold mt-32 py-2 px-4 rounded-full" onClick={captureScreenshot}>Screenshot Button</button>
+          </div>
         </div>
-        <div className="flex justify-center items-center">
+        <div>
+          {prompt}
+        </div>
+        <div className="flex justify-center items-center mt-10 pt-10">
           <BarChart
             dataset={emotionData}
-            yAxis={[{ scaleType: "band", dataKey: "label" }]}
-            series={[{ dataKey: "data", label: "Emotions" }]}
+            yAxis={[{ scaleType: "band", dataKey: "name" }]}
+            series={[{ dataKey: "score", label: "Emotions" }]}
             layout="horizontal"
             grid={{ vertical: true }}
             {...chartSetting}
           />
         </div>
-        <button onClick={captureScreenshot}>Screenshot Button</button>
       </main>
       <Footer />
     </div>
