@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webcam Feed</title>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { display: flex; flex-direction: column; align-items: center; margin-top: 20px; }
         #responseDisplay { margin-top: 20px; }
@@ -54,7 +55,7 @@
             })
             .catch(function(err) {
                 console.log("An error occurred: " + err);
-            });
+            }); 
 
         document.getElementById('capture').addEventListener('click', function() {
             var video = document.getElementById('video');
@@ -71,10 +72,56 @@
 
         socket.on('response_from_server', function(data) {
             console.log('Received response from server:', data);
-            var display = document.getElementById('responseDisplay');
-            display.textContent = 'Server Response: ' + JSON.stringify(data, null, 2);
+            updateEmotionsDisplay(data.data);  // assuming data.data contains the emotions JSON
         });
-        
+
+        const emotionCategories = {
+            positive: ["Romance", "Sympathy", "Surprise (positive)", "Admiration", "Adoration", "Aesthetic Appreciation", "Amusement", "Calmness", "Contentment", "Ecstasy", "Interest", "Joy", "Love", "Pride", "Satisfaction", "Triumph"],
+            negative: ["Contemplation",  "Tiredness", "Surprise (negative)","Confusion", "Boredom", "Anger", "Anxiety", "Awe", "Awkwardness", "Contempt", "Disappointment", "Disgust", "Distress", "Doubt", "Embarrassment", "Empathic Pain", "Fear", "Guilt", "Horror", "Pain", "Sadness", "Shame"],
+            neutral: [ "Concentration",  "Craving", "Determination", "Realization", "Relief",  ]
+        };
+
+        function getEmotionColor(emotion) {
+            if (emotionCategories.positive.includes(emotion)) {
+                return 'rgba(75, 192, 192, 0.2)';  // Greenish
+            } else if (emotionCategories.negative.includes(emotion)) {
+                return 'rgba(255, 99, 132, 0.2)';  // Reddish
+            } else {
+                return 'rgba(201, 203, 207, 0.2)';  // Gray
+            }
+        }
+
+        function updateEmotionsDisplay(data) {
+            var display = document.getElementById('responseDisplay');
+            display.innerHTML = ''; // Clear previous contents
+            var sortedEmotions = data.face.predictions[0].emotions.sort((a, b) => b.score - a.score);
+            var labels = sortedEmotions.map(e => e.name);
+            var scores = sortedEmotions.map(e => e.score);
+            var colors = sortedEmotions.map(e => getEmotionColor(e.name));
+            var ctx = document.createElement('canvas');
+            display.appendChild(ctx);
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Emotion Scores',
+                        data: scores,
+                        backgroundColor: colors,
+                        borderColor: colors.map(color => color.replace('0.2', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
     </script>
 </body>
 </html>

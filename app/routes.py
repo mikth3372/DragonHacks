@@ -8,6 +8,35 @@ from hume import HumeStreamClient, StreamSocket
 from hume.models.config import FaceConfig
 import base64
 import asyncio
+import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
+from werkzeug.utils import secure_filename
+import json
+
+CORS(app)
+@app.route('/')
+
+# @app.route('/test')
+# # def index2():
+# #     return render_template('test.html')
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    print("Inside file")
+    if 'screenshot' in request.files:
+        file = request.files['screenshot']
+        filename = secure_filename(file.filename)
+        print(f"Saving file: {filename}")
+        save_path = os.path.join('uploads', filename)
+        if not os.path.exists('uploads'):
+            print("No uploads folder, creating one")
+            os.makedirs('uploads')
+        file.save(save_path)
+        return jsonify({"message": "File uploaded successfully", "path": save_path}), 200
+    return jsonify({"error": "No file part"}), 400
+
+
 @app.route('/')
 @app.route('/index')
 
