@@ -8,18 +8,25 @@ Award: Best .Tech Domain Name
 
 ## Running the Project Locally
 
-### How to run application
+### How to start server to generate Zoom meeting SDK via HTTP request
 1. Navigate to the `frontend` folder:
    ```bash
-   cd frontend
+   cd meetingsdk-auth-endpoint-sample
    ```
 2. Install all required modules:
    ```bash
    npm install
    ```
-3. Start the application
+3. Start server
    ```bash
-   npm run dev
+   npm run start
+   ```
+### How to open application
+1. Navigate to the `DragonHacks` folder:
+2. Install all required modules:
+3. Start application
+   ```bash
+   flask run
    ```
 
 ## Application Features
@@ -33,5 +40,3 @@ Award: Best .Tech Domain Name
 - Hume API and OpenAI API for emotion detection and feedback generation
 - Backend: Flask
 - Frontend: React.js
-
-## Website Sample
