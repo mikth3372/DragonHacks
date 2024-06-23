@@ -1,4 +1,4 @@
-# Serenity - emotionally intelligent video conferencing
+# Serenity - Video Conferencing with Empathy
 
 Serenity is a full stack application, with embedded Zoom video conferencing, that analyzes particpant's emotions and provides suggestions on what to say/how to behave based on detected emotions.
 Serenity can be used as a commercial tool by recruiters from large companies or simply by your closest friends to give more emotional insight on the person you're talking to.
