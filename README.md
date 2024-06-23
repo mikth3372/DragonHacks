@@ -34,8 +34,6 @@ Award: Best .Tech Domain Name
 - Real-time visual analysis on participant's emotions
 - Suggestions on what to say/ how to behave based on detected emotions
 
-## Website Sample
-
 ## Architecture
 - Hume API and OpenAI API for emotion detection and feedback generation
 - Backend: Flask
