@@ -38,3 +38,9 @@ Award: Best .Tech Domain Name
 - Hume API and OpenAI API for emotion detection and feedback generation
 - Backend: Flask
 - Frontend: React.js
+
+## Website Sample
+<img width="991" alt="Screen Shot 2024-06-22 at 10 20 30 PM" src="https://github.com/mikth3372/DragonHacks/assets/139073954/6bf98d32-3a09-425b-844c-8ebe7b6225db">
+<img width="942" alt="Screen Shot 2024-06-22 at 10 21 12 PM" src="https://github.com/mikth3372/DragonHacks/assets/139073954/08666bbd-5037-4d1c-a669-7b95a48b4fa4">
+<img width="1006" alt="Screen Shot 2024-06-22 at 10 21 58 PM" src="https://github.com/mikth3372/DragonHacks/assets/139073954/b0dfc6da-5937-4845-a9da-7f947bbccf2b">
+
